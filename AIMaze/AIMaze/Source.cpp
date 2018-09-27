@@ -26,22 +26,6 @@ struct Maze {
 	bool visited = false;
 };
 
-struct MapNode {
-	string marker;
-	int row;
-	int col;
-	MapNode* north;
-	MapNode* south;
-	MapNode* east;
-	MapNode* west;
-};
-
-struct Agent {
-	string mark;
-	int row;
-	int col;
-};
-
 bool GetUserInput(ifstream &YourFile);
 void ReadFile(ifstream &YourFile, Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID]);
 void PrintMaze(Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID]);
@@ -54,7 +38,6 @@ void GrowTree(Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID], stack<Maze>& mystack, i
 int main(int argc, char *argv[]) {
 	ifstream YourFile;
 	Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID];
-	MapNode *myNode = NULL;
 	stack<Maze> mystack;
 	queue<Maze> myqueue;
 
@@ -72,8 +55,6 @@ int main(int argc, char *argv[]) {
 			}
 			else {
 				cout << "Failure to open " << YourInput << " !\n";
-				//system("pause");
-				//return 1;
 			}
 		}
 	}
@@ -112,14 +93,6 @@ int main(int argc, char *argv[]) {
 		col = myqueue.front().col;
 		myqueue.pop();
 		GrowTree(yourMaze, myqueue, row, col);
-		//if (myqueue.front().mark == "X") {
-			//solution = true;
-			//break;
-		//}
-		//else
-			//myqueue.pop();
-		//cout << "Not Done yet\n";
-		
 	}
 	if (solution) {
 		cout << "Solution found with queue at " << myqueue.front().row << " " << myqueue.front().col << endl;
@@ -159,13 +132,6 @@ int main(int argc, char *argv[]) {
 		col = mystack.top().col;
 		mystack.pop();
 		GrowTree(yourMaze, mystack, row, col);
-		//if (mystack.top().mark == "X") {
-			//solution = true;
-			//break;
-		//}
-		//cout << "Not Done yet\n";
-		//system("pause");
-
 	}
 	if (solution) {
 		cout << "Solution found with stack at " << mystack.top().row << " " << mystack.top().col << endl;
@@ -196,8 +162,6 @@ bool GetUserInput(ifstream &YourFile) {
 		}
 		else {
 			cout << "Failure to open " << YourInput << " !\n";
-			//system("pause");
-			//return false;
 		}
 	}
 }
@@ -238,38 +202,26 @@ void GrowTree(Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID], queue<Maze>& myqueue,in
 	if (yourMaze[row - 1][col].mark == "X" ||
 		(yourMaze[row - 1][col].mark == "P" &&
 			yourMaze[row - 1][col].visited == false)) {
-		//cout << "Growing North!\n";
-		//yourMaze[myqueue.front().row][myqueue.front().col].visited = true;
 		yourMaze[row][col].mark = "*";
 		myqueue.push(yourMaze[row - 1][col]);
-		//Root->north = new MapNode;
 	}
 	if (yourMaze[row][col + 1].mark == "X" ||
 		(yourMaze[row][col + 1].mark == "P" &&
 			yourMaze[row][col + 1].visited == false)) {
-		//cout << "Growing East!\n";
-		//yourMaze[myqueue.front().row][myqueue.front().col].visited = true;
 		yourMaze[row][col].mark = "*";
 		myqueue.push(yourMaze[row][col + 1]);
-		//Root->east = new MapNode;
 	}
 	if (yourMaze[row + 1][col].mark == "X" ||
 		(yourMaze[row + 1][col].mark == "P" &&
 			yourMaze[row + 1][col].visited == false)) {
-		//cout << "Growing South!\n";
-		//yourMaze[myqueue.front().row][myqueue.front().col].visited = true;
 		yourMaze[row][col].mark = "*";
 		myqueue.push(yourMaze[row + 1][col]);
-		//Root->south = new MapNode;
 	}
 	if (yourMaze[row][col - 1].mark == "X" ||
 		(yourMaze[row][col - 1].mark == "P" &&
 			yourMaze[row][col - 1].visited == false)) {
-		//cout << "Growing West!\n";
-		//yourMaze[myqueue.front().row][myqueue.front().col].visited = true;
 		yourMaze[row][col].mark = "*";
 		myqueue.push(yourMaze[row][col - 1]);
-		//Root->west = new MapNode;
 	}
 }
 
@@ -278,37 +230,25 @@ void GrowTree(Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID], stack<Maze>& mystack, i
 	if (yourMaze[row - 1][col].mark == "X" ||
 		(yourMaze[row - 1][col].mark == "P" &&
 			yourMaze[row - 1][col].visited == false)) {
-		//cout << "Growing North!\n";
-		//yourMaze[myqueue.front().row][myqueue.front().col].visited = true;
 		yourMaze[row][col].mark = "*";
 		mystack.push(yourMaze[row - 1][col]);
-		//Root->north = new MapNode;
 	}
 	if (yourMaze[row][col + 1].mark == "X" ||
 		(yourMaze[row][col + 1].mark == "P" &&
 			yourMaze[row][col + 1].visited == false)) {
-		//cout << "Growing East!\n";
-		//yourMaze[myqueue.front().row][myqueue.front().col].visited = true;
 		yourMaze[row][col].mark = "*";
 		mystack.push(yourMaze[row][col + 1]);
-		//Root->east = new MapNode;
 	}
 	if (yourMaze[row + 1][col].mark == "X" ||
 		(yourMaze[row + 1][col].mark == "P" &&
 			yourMaze[row + 1][col].visited == false)) {
-		//cout << "Growing South!\n";
-		//yourMaze[myqueue.front().row][myqueue.front().col].visited = true;
 		yourMaze[row][col].mark = "*";
 		mystack.push(yourMaze[row + 1][col]);
-		//Root->south = new MapNode;
 	}
 	if (yourMaze[row][col - 1].mark == "X" ||
 		(yourMaze[row][col - 1].mark == "P" &&
 			yourMaze[row][col - 1].visited == false)) {
-		//cout << "Growing West!\n";
-		//yourMaze[myqueue.front().row][myqueue.front().col].visited = true;
 		yourMaze[row][col].mark = "*";
 		mystack.push(yourMaze[row][col - 1]);
-		//Root->west = new MapNode;
 	}
 }
