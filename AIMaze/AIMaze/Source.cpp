@@ -7,6 +7,8 @@
 //
 //Start: 9/13/2018
 //
+//
+//TODO: CREATE a queue function and stack function to make main less cluttered.
 
 #include <iostream>
 #include <string>
@@ -30,6 +32,8 @@ bool GetUserInput(ifstream &YourFile);
 void ReadFile(ifstream &YourFile, Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID]);
 void PrintMaze(Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID]);
 int FindEntrance(Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID]);
+void SearchWithQueue(Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID], int row, int col);
+void SearchWithStack(Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID], int row, int col);
 void GrowTree(Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID], queue<Maze>& myqueue, int row, int col);
 void GrowTree(Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID], stack<Maze>& mystack, int row, int col);
 
@@ -38,8 +42,6 @@ void GrowTree(Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID], stack<Maze>& mystack, i
 int main(int argc, char *argv[]) {
 	ifstream YourFile;
 	Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID];
-	stack<Maze> mystack;
-	queue<Maze> myqueue;
 
 	// First we are going to check if the user sent in the name of the file using the command line.
 	if (argc == 2) {
@@ -67,43 +69,20 @@ int main(int argc, char *argv[]) {
 	//This is main. Functions that will be called in order of
 	// Read in the user file ( file and map)
 	// Print out the maze to show the user the correct maze ( map )
-	// And then I think I'll do a Navigate ( map, agent)
-	//		Inside navigate I think I'll have a findEntrance <------------ And maybe later have this search the entire map
-	// 
+	
 
 	ReadFile(YourFile, yourMaze);
 	PrintMaze(yourMaze);
 
 	system("pause");
 
+	//___________________________________BREADTH SEARCH__________________________________
 	//Getting the coords for entrance.
 	int row = FindEntrance(yourMaze);
 	int col = 0;
-	
-	//QUEUE---------------------------------------------------------------------------------------------------------------
-	bool solution = false;
-	myqueue.push(yourMaze[row][col]);
-	while (!myqueue.empty()) {
-		PrintMaze(yourMaze);
-		if (myqueue.front().mark == "X") {
-			solution = true;
-			break;
-		}
-		row = myqueue.front().row;
-		col = myqueue.front().col;
-		myqueue.pop();
-		GrowTree(yourMaze, myqueue, row, col);
-	}
-	if (solution) {
-		cout << "Solution found with queue at " << myqueue.front().row << " " << myqueue.front().col << endl;
-		yourMaze[myqueue.front().row][myqueue.front().col].mark = "*";
-		PrintMaze(yourMaze);
-	}
-	else
-		cout << "No Solution\n";
-	system("pause");
-	//QUEUE DONE------------------------------------------------------------------------------------------------
-	
+	SearchWithQueue(yourMaze, row, col);
+	//____________________________________END BREADTH____________________________________
+
 	//Reset the input file.
 	YourFile.clear();
 	YourFile.seekg(0, ios::beg);
@@ -113,34 +92,12 @@ int main(int argc, char *argv[]) {
 	cout << "Reset the map for stack\n\n";
 	system("pause");
 	
-	
-	//STACK-----------------------------------------------------------------------------------------------------
+	//__________________________________DEPTH SEARCH_____________________________________
 	//Reseting the coords for entrance.
 	row = FindEntrance(yourMaze);
 	col = 0;
-	//
-
-	solution = false;
-	mystack.push(yourMaze[row][col]);
-	while (!mystack.empty()) {
-		PrintMaze(yourMaze);
-		if (mystack.top().mark == "X") {
-			solution = true;
-			break;
-		}
-		row = mystack.top().row;
-		col = mystack.top().col;
-		mystack.pop();
-		GrowTree(yourMaze, mystack, row, col);
-	}
-	if (solution) {
-		cout << "Solution found with stack at " << mystack.top().row << " " << mystack.top().col << endl;
-		yourMaze[mystack.top().row][mystack.top().col].mark = "*";
-		PrintMaze(yourMaze);
-	}
-	else
-		cout << "No Solution\n";
-	//STACK END-------------------------------------------------------------------------------------------------------
+	SearchWithQueue(yourMaze, row, col);
+	//__________________________________END DEPTH_____________________________________
 	
 	system("pause");
 	//Close files and get out.
@@ -195,6 +152,55 @@ int FindEntrance(Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID]) {
 			return x;
 		x++;
 	}
+}
+
+void SearchWithQueue(Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID], int row, int col) {
+	bool solution = false;
+	queue<Maze> myqueue;
+	myqueue.push(yourMaze[row][col]);
+	while (!myqueue.empty()) {
+		PrintMaze(yourMaze);
+		if (myqueue.front().mark == "X") {
+			solution = true;
+			break;
+		}
+		row = myqueue.front().row;
+		col = myqueue.front().col;
+		myqueue.pop();
+		GrowTree(yourMaze, myqueue, row, col);
+	}
+	if (solution) {
+		cout << "Solution found with queue at " << myqueue.front().row << " " << myqueue.front().col << endl;
+		yourMaze[myqueue.front().row][myqueue.front().col].mark = "*";
+		PrintMaze(yourMaze);
+	}
+	else
+		cout << "No Solution\n";
+	system("pause");
+}
+
+void SearchWithStack(Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID], int row, int col) {
+	bool solution = false;
+	stack<Maze> mystack;
+	mystack.push(yourMaze[row][col]);
+	while (!mystack.empty()) {
+		PrintMaze(yourMaze);
+		if (mystack.top().mark == "X") {
+			solution = true;
+			break;
+		}
+		row = mystack.top().row;
+		col = mystack.top().col;
+		mystack.pop();
+		GrowTree(yourMaze, mystack, row, col);
+	}
+	if (solution) {
+		cout << "Solution found with stack at " << mystack.top().row << " " << mystack.top().col << endl;
+		yourMaze[mystack.top().row][mystack.top().col].mark = "*";
+		PrintMaze(yourMaze);
+	}
+	else
+		cout << "No Solution\n";
 }
 
 void GrowTree(Maze yourMaze[MAX_NUM_GRID][MAX_NUM_GRID], queue<Maze>& myqueue,int row, int col) {

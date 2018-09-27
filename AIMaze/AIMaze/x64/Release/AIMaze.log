@@ -1,0 +1,7 @@
+﻿  Source.cpp
+  Generating code
+c:\users\shoem\documents\github\ai-maze\aimaze\aimaze\source.cpp(201): warning C4715: 'FindEntrance': not all control paths return a value
+c:\users\shoem\documents\github\ai-maze\aimaze\aimaze\source.cpp(170): warning C4715: 'GetUserInput': not all control paths return a value
+  All 303 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  AIMaze.vcxproj -> C:\Users\Shoem\Documents\GitHub\AI-Maze\AIMaze\x64\Release\AIMaze.exe
