@@ -1,0 +1,4 @@
+﻿  Source.cpp
+c:\users\shoem\documents\visual studio 2017\projects\aimaze\aimaze\source.cpp(234): warning C4715: 'FindEntrance': not all control paths return a value
+c:\users\shoem\documents\visual studio 2017\projects\aimaze\aimaze\source.cpp(203): warning C4715: 'GetUserInput': not all control paths return a value
+  AIMaze.vcxproj -> C:\Users\Shoem\Documents\Visual Studio 2017\Projects\AIMaze\Debug\AIMaze.exe
